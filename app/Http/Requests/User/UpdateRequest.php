@@ -36,11 +36,11 @@ class UpdateRequest extends FormRequest
             'name' => 'required|string',
             'email' => ['required', 'email', new UserNotExists(\request()->route('id'))],
             'telegram' => 'string',
-            'balance' => 'numeric',
             'password' => 'nullable|string|min:8',
             'role' => ['required', Rule::in($roles)],
             'pages' => ['exclude_unless:role,' . $roles['pseudo_admin'], 'array', new RelatedWithUser('pages')],
             'users' => ['exclude_unless:role,' . $roles['pseudo_admin'], 'array', new RelatedWithUser('users')],
+            'all_users' => 'nullable'
         ];
     }
 }

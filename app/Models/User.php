@@ -43,7 +43,8 @@ class User extends Authenticatable
         'password',
         'role',
         'two_factor_secret',
-        'two_factor_recovery_codes'
+        'two_factor_recovery_codes',
+        'all_users'
     ];
 
     /**
@@ -91,14 +92,25 @@ class User extends Authenticatable
             ->where('role', '!=', self::ROLES['admin'])
             ->where('role', '!=', self::ROLES['superuser'])
             ->where('id', '!=', $this->id);
-        return match ($this->role) {
-            self::ROLES['admin'], self::ROLES['superuser'] => self::query()
-                ->where('id', '!=', $this->id)
-                ->where('role', '!=', self::ROLES['superuser']),
-            self::ROLES['pseudo_admin'] => $relation,
-            default => self::query()
-                ->whereNull('id'),
-        };
+        switch ($this->role) {
+            case self::ROLES['admin']:
+            case self::ROLES['superuser']:
+                return self::query()
+                    ->where('id', '!=', $this->id)
+                    ->where('role', '!=', self::ROLES['superuser']);
+            case self::ROLES['pseudo_admin']:
+                if($this->all_users) {
+                    return self::query()
+                        ->where('id', '!=', $this->id)
+                        ->where('role', '!=', self::ROLES['admin'])
+                        ->where('role', '!=', self::ROLES['pseudo_admin'])
+                        ->where('role', '!=', self::ROLES['superuser']);
+                }
+                return $relation;
+            default:
+                return self::query()
+                    ->whereNull('id');
+        }
     }
 
     public static function getByUser(self $user) {

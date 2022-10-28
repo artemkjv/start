@@ -63,7 +63,7 @@
 
         @if($state['role'] === \App\Models\User::ROLES['pseudo_admin'])
 
-            <div class="flex flex-wrap -mx-3 mb-4">
+            <div class="@if(!$state['all_users']) flex @endif flex-wrap -mx-3 mb-4">
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                            for="pages">
@@ -86,6 +86,7 @@
                         </div>
                     </div>
                 </div>
+                @if(!$state['all_users'])
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                            for="users">
@@ -108,6 +109,15 @@
                         </div>
                     </div>
                 </div>
+                @endif
+            </div>
+
+            <div id="all-users-container" class="mb-4 flex gap-2">
+                <x-label class="uppercase inline-block"
+                         for="all-users">All Users?</x-label>
+                <input type="checkbox"
+                       class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                       wire:model="state.all_users" name="all_users" id="all-users" />
             </div>
 
         @endif

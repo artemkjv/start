@@ -13,7 +13,8 @@ class CreateComponent extends Component
     public Collection $pages;
     public Collection $users;
     public array $state = [
-        'role' => null
+        'role' => null,
+        'all_users' => false
     ];
 
     public function render()

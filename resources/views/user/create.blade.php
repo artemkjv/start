@@ -19,7 +19,9 @@
                             $(function () {
                                 Livewire.on('updatedState', state => {
                                     if (state.role === '{{ \App\Models\User::ROLES['pseudo_admin'] }}') {
-                                        $('#users').filterMultiSelect()
+                                        if(!state.all_users) {
+                                            $('#users').filterMultiSelect()
+                                        }
                                         $('#pages').filterMultiSelect()
                                     } else {
                                         $.fn.filterMultiSelect.applied = []

@@ -20,6 +20,7 @@ class EditComponent extends Component
         $this->pages = Page::getByUser(\request()->user());
         $this->users = User::getByUser(\request()->user());
         $this->state['role'] = $user->role;
+        $this->state['all_users'] = $user->all_users;
         $this->state['pages'] = Page::getByUser($user)->pluck('id')
             ->toArray();
         $this->state['users'] = User::getByUser($user)->pluck('id')

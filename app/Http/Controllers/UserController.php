@@ -44,6 +44,9 @@ class UserController extends Controller
 
     public function store(StoreRequest $request) {
         $payload = $request->validated();
+        if($payload['role'] === User::ROLES['pseudo_admin']) {
+            $payload['all_users'] = isset($payload['all_users']);
+        }
         $payload['password'] = \Hash::make($payload['password']);
         $payload['tg_key'] = Str::random(30);
         $user = User::create($payload);
@@ -59,6 +62,9 @@ class UserController extends Controller
 
     public function update(UpdateRequest $request, $id) {
         $payload = $request->validated();
+        if($payload['role'] === User::ROLES['pseudo_admin']) {
+            $payload['all_users'] = isset($payload['all_users']);
+        }
         $user = User::getByUserAndId(\request()->user(), $id);
         $user->detachOldRelations();
         $this->userService->handleNewPassword($payload);

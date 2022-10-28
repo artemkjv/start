@@ -36,12 +36,11 @@ class StoreRequest extends FormRequest
             'name' => 'required|string',
             'email' => 'required|string|email|max:255|unique:users',
             'telegram' => 'string',
-            'tg_key' => 'string',
-            'balance' => 'numeric',
             'password' => 'required|string|min:8',
             'role' => ['required', Rule::in($roles)],
             'pages' => ['exclude_unless:role,' . $roles['pseudo_admin'], 'array', new RelatedWithUser('pages')],
             'users' => ['exclude_unless:role,' . $roles['pseudo_admin'], 'array', new RelatedWithUser('users')],
+            'all_users' => 'nullable'
         ];
     }
 }

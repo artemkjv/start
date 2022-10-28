@@ -61,8 +61,8 @@
 
         @if($state['role'] === \App\Models\User::ROLES['pseudo_admin'])
 
-            <div class="flex flex-wrap -mx-3 mb-4">
-                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+            <div id="pseudo-container" class="@if(!$state['all_users']) flex @endif flex-wrap -mx-3 mb-4">
+                <div id="pages-container" class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                            for="pages">
                         {{ __('Pages') }}
@@ -84,7 +84,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                @if(!$state['all_users'])
+                <div id="users-container" class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                     <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                            for="users">
                         {{ __('Users') }}
@@ -106,10 +107,18 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
-
+            <div id="all-users-container" class="mb-4 flex gap-2">
+                <x-label class="uppercase inline-block"
+                       for="all-users">All Users?</x-label>
+                <input type="checkbox"
+                       class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                       wire:model="state.all_users" name="all_users" id="all-users" />
+            </div>
         @endif
-        <button type="submit"
+
+        <button id="smt-button" type="submit"
                 class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
             {{ __('Submit') }}
         </button>
