@@ -1,0 +1,63 @@
+version: "3.5"
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/hosts:/etc/nginx/conf.d
+      - ./:/var/www/html
+      - ./nginx/logs:/var/log/nginx
+    links:
+      - php
+
+  php:
+    build:
+      ./php
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - mysql
+    links:
+      - mysql
+      - redis
+    working_dir: /var/www/html
+    environment:
+      UPLOAD_LIMIT: 64M
+
+  mysql:
+    image: mysql:latest
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: application_db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      UPLOAD_LIMIT: 300M
+      MYSQL_ROOT_PASSWORD: root
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+    - 8081:80
+
+  redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass root
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/redis-data:/var/lib/redis
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_REPLICATION_MODE=master
